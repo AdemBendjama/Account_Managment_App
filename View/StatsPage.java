@@ -62,7 +62,7 @@ public class StatsPage {
         hboxStandardDeviation.setSpacing(185);
         // ! Gridpane
         gridPane.setAlignment(Pos.TOP_LEFT);
-        gridPane.setPadding(new Insets(40, 30, 30, 170));
+        gridPane.setPadding(new Insets(40, 30, 30, 140));
         gridPane.setVgap(30);
         gridPane.setHgap(20);
         gridPane.add(hboxheader, 0, 0);

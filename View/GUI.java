@@ -2,7 +2,6 @@ package View;
 
 import Controller.AppController;
 import javafx.application.Application;
-import javafx.event.Event;
 import javafx.stage.Stage;
 
 public class GUI extends Application {
@@ -64,15 +63,23 @@ public class GUI extends Application {
 
     }
 
-    public void homePageFunctionality(Stage window) {
+    public void updateList() {
         //
         String list = appController.getListOfUsers();
         homePage.getListOfUsersLabel().setText(list);
+    }
+
+    public void homePageFunctionality(Stage window) {
+        //
+        updateList();
 
         //
         homePage.getLogOutButton().setOnAction(arg0 -> window.setScene(loginPage.getScene()));
 
-        homePage.getViewStatsButton().setOnAction(arg0 -> window.setScene(statsPage.getScene()));
+        homePage.getViewStatsButton().setOnAction(arg0 -> {
+            statsPageFunctionality(window);
+            window.setScene(statsPage.getScene());
+        });
 
         homePage.getAddUserButton().setOnAction(arg0 -> {
             addUserPage.getLabelDisplay().setText("");
@@ -93,18 +100,37 @@ public class GUI extends Application {
 
     public void statsPageFunctionality(Stage window) {
         //
-        statsPage.getButtonHome().setOnAction(arg0 -> window.setScene(homePage.getScene()));
+        statsPage.getButtonHome().setOnAction(arg0 -> {
+            updateList();
+            window.setScene(homePage.getScene());
+        });
+        // Number of users
+        int nbrUsers = appController.getNumberOfUsers();
+        statsPage.getLabelCountValue().setText(String.valueOf(nbrUsers));
+
+        // Average ID of Users
+        double avgUsersId = appController.getAverageUserNote();
+        statsPage.getLabelAverageValue().setText(appController.formatDouble(avgUsersId));
+
+        //
+        double avg = appController.getAverageUserNote();
+        double count = appController.getNumberOfUsers();
+        // The Variance
+        double variance = appController.getVariance(avg, count);
+        statsPage.getLabelVarianceValue().setText(appController.formatDouble(variance));
+
+        // Standard Deviation
+        double standardDeviation = appController.getStandardDeviation(avg, count);
+        statsPage.getLabelStandardDeviationValue().setText(appController.formatDouble(standardDeviation));
     }
 
     public void addUserPageFunctionality(Stage window) {
         //
         addUserPage.getButtonHome().setOnAction(arg0 -> {
             //
-            window.setScene(homePage.getScene());
+            updateList();
             //
-            String list = appController.getListOfUsers();
-            homePage.getListOfUsersLabel().setText(list);
-
+            window.setScene(homePage.getScene());
         });
 
         //
@@ -135,11 +161,9 @@ public class GUI extends Application {
         //
         updateUserPage.getButtonHome().setOnAction(arg0 -> {
             //
-            window.setScene(homePage.getScene());
+            updateList();
             //
-            String list = appController.getListOfUsers();
-            homePage.getListOfUsersLabel().setText(list);
-
+            window.setScene(homePage.getScene());
         });
 
         //
@@ -172,11 +196,9 @@ public class GUI extends Application {
         //
         deleteUserPage.getButtonHome().setOnAction(arg0 -> {
             //
-            window.setScene(homePage.getScene());
+            updateList();
             //
-            String list = appController.getListOfUsers();
-            homePage.getListOfUsersLabel().setText(list);
-
+            window.setScene(homePage.getScene());
         });
 
         //
