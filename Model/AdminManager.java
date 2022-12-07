@@ -26,6 +26,18 @@ public class AdminManager {
     }
 
     //
+    public boolean testConnection(){
+        //
+        try {
+            DriverManager.getConnection(url, root, password);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false ;
+        }
+    }
+
+    //
     public boolean checkCredentials(String email,String password){
         //
         try {

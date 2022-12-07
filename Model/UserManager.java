@@ -15,6 +15,7 @@ public class UserManager {
     private String url = "jdbc:mysql://localhost:3306/TQL_APP_BD";
     private String root = "root";
     private String password = "password";
+
     //
     public UserManager() {
         //
@@ -22,6 +23,18 @@ public class UserManager {
             this.connection = DriverManager.getConnection(url, root, password);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    //
+    public boolean testConnection(){
+        //
+        try {
+            DriverManager.getConnection(url, root, password);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false ;
         }
     }
 
@@ -60,17 +73,17 @@ public class UserManager {
     }
 
     //
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         //
         List<User> users = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement("select * from users");
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 //
                 User user = new User(resultSet.getString(1), resultSet.getString(2),
-                resultSet.getString(3), resultSet.getString(4));
+                        resultSet.getString(3), resultSet.getString(4));
 
                 users.add(user);
             }
@@ -82,9 +95,25 @@ public class UserManager {
     }
 
     //
-    public boolean addUser(User user){
+    public int getNumberOfUsers() {
         //
-        if(checkUser(user.getEmail())){
+        try {
+            preparedStatement = connection.prepareStatement("select COUNT(*) from users");
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            resultSet.next();
+            return resultSet.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //
+        return 0;
+    }
+
+    //
+    public boolean addUser(User user) {
+        //
+        if (checkUser(user.getEmail())) {
             System.out.println("User Already Exists in the Database");
             return false;
         }
@@ -106,10 +135,11 @@ public class UserManager {
             return false;
         }
     }
+
     //
-    public boolean deleteUser(String email){
+    public boolean deleteUser(String email) {
         //
-        if(!checkUser(email)){
+        if (!checkUser(email)) {
             System.out.println("User doesnt exist");
             return false;
         }
@@ -128,10 +158,11 @@ public class UserManager {
             return false;
         }
     }
+
     //
-    public boolean updateUser(String email,User user){
+    public boolean updateUser(String email, User user) {
         //
-        if(!checkUser(email)){
+        if (!checkUser(email)) {
             System.out.println("User doesnt exist");
             return false;
         }
@@ -139,7 +170,8 @@ public class UserManager {
         //
         try {
 
-            preparedStatement = connection.prepareStatement("update users set user_email=?, user_name=?, user_password=?, user_rank=?  where user_email=? ");
+            preparedStatement = connection.prepareStatement(
+                    "update users set user_email=?, user_name=?, user_password=?, user_rank=?  where user_email=? ");
             preparedStatement.setString(1, user.getEmail());
             preparedStatement.setString(2, user.getUsername());
             preparedStatement.setString(3, user.getPassword());
